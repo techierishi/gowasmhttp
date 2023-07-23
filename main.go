@@ -1,26 +1,16 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"syscall/js"
-	"time"
 
-	fetch "marwan.io/wasm-fetch"
+	utl "github.com/techierishi/wasmlua/util"
 )
 
 func runLua(this js.Value, inputs []js.Value) interface{} {
-	// lr := utl.LuaRunner{}
-	// stdOut, _ := lr.RunLuaFunc(inputs[0].String())
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	res, _ := fetch.Fetch("https://reqres.in/api/users?page=2", &fetch.Opts{
-		Method: fetch.MethodGet,
-		Signal: ctx,
-	})
+	lr := utl.LuaRunner{}
+	lr.RunLuaFunc(inputs[0].String())
 
-	fmt.Println(string(res.Body))
-	return res.Body
+	return []interface{}{1, "two"}
 }
 
 func main() {

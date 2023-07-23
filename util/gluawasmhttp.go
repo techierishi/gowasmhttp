@@ -67,17 +67,18 @@ func (h *httpModule) request(L *lua.LState) int {
 func (h *httpModule) doRequest(L *lua.LState, method string, url string, options *lua.LTable) (*lua.LUserData, error) {
 
 	ctx := L.Context()
+	var doRes *fetch.Response
+	go func() {
+		res, _ := fetch.Fetch(url, &fetch.Opts{
+			Method: method,
+			Signal: ctx,
+		})
+		doRes = res
+		fmt.Println("inside ", string(doRes.Body))
 
-	res, err := fetch.Fetch(url, &fetch.Opts{
-		Method: method,
-		Signal: ctx,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Println(string(res.Body))
-	return newHttpResponse(res, nil, 0, L), nil
+	}()
+	fmt.Println("outside ", string(doRes.Body))
+	return newHttpResponse(doRes, nil, 0, L), nil
 }
 
 func (h *httpModule) doRequestAndPush(L *lua.LState, method string, url string, options *lua.LTable) int {

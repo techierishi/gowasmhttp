@@ -70,5 +70,7 @@ func (lr *LuaRunner) RunLuaFunc(luaCode string) (*string, error) {
 	result := L.Get(-1)
 	L.Pop(1)
 	resultStr := result.String()
+
+	fmt.Println(resultStr)
 	return &resultStr, nil
 }

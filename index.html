@@ -7,7 +7,25 @@
 </head>
 <body>
   <h1>Multiply Two Numbers with Go WebAssembly</h1>
-  <textarea id="luacode" placeholder="Enter lua code"> </textarea>
+  <textarea id="luacode" placeholder="Enter lua code">
+    
+    local json = require("json")
+    local http = require("http")
+       
+    function main()
+       local response, err = http.request("GET", "https://reqres.in/api/users?page=2")
+       if err then
+          return nil, err
+       end
+       local res = response.body
+    
+       local jsonObj = json.decode(res)
+       local jsonStr = json.encode(jsonObj["data"])
+    
+       return jsonStr
+    end
+    
+  </textarea>
 
   <button id="runlua">Run</button>
   <p id="result"></p>
